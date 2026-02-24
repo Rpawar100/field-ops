@@ -5,33 +5,40 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class AuditLog extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'performed_by',
-        'action',
-        'model_type',
-        'model_id',
+        'user_id',
+        'auditable_type',
+        'auditable_id',
+        'event',
         'old_values',
         'new_values',
         'ip_address',
         'user_agent',
-        'action_timestamp',
+        'url',
     ];
 
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'action_timestamp' => 'datetime',
         'old_values' => 'json',
         'new_values' => 'json',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    public function performer(): BelongsTo
+    // ==================== RELATIONSHIPS ====================
+
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'performed_by');
+        return $this->belongsTo(User::class);
+    }
+
+    public function auditable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

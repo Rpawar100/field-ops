@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @deprecated The 2024 schema uses a 'role' enum column on the users table instead of
+ * a separate roles table. This model is kept for backward compatibility only.
+ */
 class Role extends Model
 {
     use HasFactory;
@@ -20,7 +24,6 @@ class Role extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'status' => 'boolean',
     ];
 
     public function permissions(): BelongsToMany

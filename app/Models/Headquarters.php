@@ -2,30 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
-class Headquarters extends Model
+/**
+ * Headquarters is a backward-compatible alias that queries zrth_hierarchies where level='hq'.
+ * All new code should use ZrthHierarchy::headquarters() scope instead.
+ *
+ * @deprecated Use ZrthHierarchy with scopeHeadquarters() instead
+ */
+class Headquarters extends ZrthHierarchy
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'territory_id',
-        'name',
-        'code',
-        'address',
-        'status',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'status' => 'boolean',
-    ];
-
-    public function territory(): BelongsTo
+    protected static function booted(): void
     {
-        return $this->belongsTo(Territory::class);
+        static::addGlobalScope('hq_level', function ($query) {
+            $query->where('level', 'hq');
+        });
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->level = 'hq';
+        });
     }
 }

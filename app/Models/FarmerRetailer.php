@@ -13,15 +13,18 @@ class FarmerRetailer extends Model
     protected $fillable = [
         'farmer_id',
         'retailer_id',
-        'relationship_type',
-        'status',
+        'is_primary',
+        'annual_purchase_value',
     ];
 
     protected $casts = [
+        'is_primary' => 'boolean',
+        'annual_purchase_value' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'status' => 'boolean',
     ];
+
+    // ==================== RELATIONSHIPS ====================
 
     public function farmer(): BelongsTo
     {

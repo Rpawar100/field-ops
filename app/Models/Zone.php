@@ -2,29 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class Zone extends Model
+/**
+ * Zone is a backward-compatible alias that queries zrth_hierarchies where level='zone'.
+ * All new code should use ZrthHierarchy::zones() scope instead.
+ *
+ * @deprecated Use ZrthHierarchy with scopeZones() instead
+ */
+class Zone extends ZrthHierarchy
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'name',
-        'code',
-        'description',
-        'status',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'status' => 'boolean',
-    ];
-
-    public function regions(): HasMany
+    protected static function booted(): void
     {
-        return $this->hasMany(Region::class);
+        static::addGlobalScope('zone_level', function ($query) {
+            $query->where('level', 'zone');
+        });
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->level = 'zone';
+        });
     }
 }

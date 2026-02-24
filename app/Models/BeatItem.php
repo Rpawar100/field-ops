@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @deprecated The 2024 schema uses beat_farmers/beat_retailers pivot tables instead.
+ * Kept for backward compatibility.
+ */
 class BeatItem extends Model
 {
     use HasFactory;
@@ -19,10 +23,9 @@ class BeatItem extends Model
     ];
 
     protected $casts = [
+        'quantity' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'status' => 'boolean',
-        'quantity' => 'decimal:2',
     ];
 
     public function beat(): BelongsTo

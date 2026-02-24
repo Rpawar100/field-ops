@@ -4,26 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class District extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'state_id',
-        'name',
         'code',
-        'description',
+        'name',
+        'state_id',
         'status',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'status' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
+
+    // ==================== RELATIONSHIPS ====================
 
     public function state(): BelongsTo
     {
@@ -33,5 +36,12 @@ class District extends Model
     public function talukas(): HasMany
     {
         return $this->hasMany(Taluka::class);
+    }
+
+    // ==================== SCOPES ====================
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', 'active');
     }
 }

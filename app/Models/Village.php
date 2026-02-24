@@ -4,26 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Village extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'taluka_id',
-        'name',
         'code',
-        'description',
+        'name',
+        'taluka_id',
+        'pincode',
+        'latitude',
+        'longitude',
         'status',
     ];
 
     protected $casts = [
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'status' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
+
+    // ==================== RELATIONSHIPS ====================
 
     public function taluka(): BelongsTo
     {
@@ -47,11 +56,33 @@ class Village extends Model
 
     public function activities(): HasMany
     {
-        return $this->hasMany(Activity::class, 'location_id');
+        return $this->hasMany(Activity::class);
     }
 
     public function distributors(): HasMany
     {
         return $this->hasMany(Distributor::class);
+    }
+
+    /**
+     * ZRTH hierarchies mapped via sdtv_zrth_mappings
+     */
+    public function zrthHierarchies(): BelongsToMany
+    {
+        return $this->belongsToMany(ZrthHierarchy::class, 'sdtv_zrth_mappings', 'village_id', 'zrth_hierarchy_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    public function sdtvMappings(): HasMany
+    {
+        return $this->hasMany(SdtvZrthMapping::class, 'village_id');
+    }
+
+    // ==================== SCOPES ====================
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', 'active');
     }
 }

@@ -2,32 +2,11 @@
 
 namespace App\Models\Onboarding;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
-class OnboardingDocument extends Model
+/**
+ * @deprecated The 2024 schema uses fa_documents instead.
+ * Use \App\Models\FaDocument instead.
+ */
+class OnboardingDocument extends \App\Models\FaDocument
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'onboarding_request_id',
-        'document_type',
-        'document_name',
-        'file_path',
-        'uploaded_at',
-        'status',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'uploaded_at' => 'datetime',
-        'status' => 'boolean',
-    ];
-
-    public function onboardingRequest(): BelongsTo
-    {
-        return $this->belongsTo(OnboardingRequest::class);
-    }
+    // Backward-compatible alias
 }

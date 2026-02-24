@@ -11,6 +11,7 @@ use App\Http\Controllers\Web\ATPController;
 use App\Http\Controllers\Web\DemoController;
 use App\Http\Controllers\Web\OnboardingController;
 use App\Http\Controllers\Web\ReportController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +20,21 @@ use App\Http\Controllers\Web\ReportController;
 | Routes for the admin/manager Blade web portal interface
 */
 
-// Public Routes
-Route::get('/login', 'App\Http\Controllers\Auth\LoginController@show')->name('login');
-Route::post('/login', 'App\Http\Controllers\Auth\LoginController@login');
-Route::post('/logout', 'App\Http\Controllers\Auth\LoginController@logout')->name('logout');
+/*
+|--------------------------------------------------------------------------
+| Admin Panel Routes — redirect to main dashboard
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('dashboard');
+    })->name('admin.dashboard');
+});
+
+// Public Routes (Authentication)
+Route::get('/login', [LoginController::class, 'show'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected Routes (Authenticated Users Only)
 Route::middleware(['auth'])->group(function () {

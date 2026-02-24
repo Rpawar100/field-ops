@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @deprecated The 2024 schema stores activity attributes as JSON in the activities.attributes column.
+ * This model is kept for backward compatibility with old code references.
+ */
 class ActivityAttribute extends Model
 {
     use HasFactory;

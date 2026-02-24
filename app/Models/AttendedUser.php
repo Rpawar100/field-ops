@@ -13,13 +13,15 @@ class AttendedUser extends Model
     protected $fillable = [
         'activity_id',
         'user_id',
-        'attendance_status',
+        'role_in_activity',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    // ==================== RELATIONSHIPS ====================
 
     public function activity(): BelongsTo
     {

@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @deprecated See ATP model. Kept for backward compatibility.
+ */
 class ATPItem extends Model
 {
     use HasFactory;
+
+    protected $table = 'atp_items';
 
     protected $fillable = [
         'atp_id',
@@ -19,14 +24,14 @@ class ATPItem extends Model
     ];
 
     protected $casts = [
+        'planned_time' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'planned_time' => 'datetime',
     ];
 
     public function atp(): BelongsTo
     {
-        return $this->belongsTo(ATP::class);
+        return $this->belongsTo(ATP::class, 'atp_id');
     }
 
     public function beat(): BelongsTo

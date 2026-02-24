@@ -2,36 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class Region extends Model
+/**
+ * Region is a backward-compatible alias that queries zrth_hierarchies where level='region'.
+ * All new code should use ZrthHierarchy::regions() scope instead.
+ *
+ * @deprecated Use ZrthHierarchy with scopeRegions() instead
+ */
+class Region extends ZrthHierarchy
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'zone_id',
-        'name',
-        'code',
-        'description',
-        'status',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'status' => 'boolean',
-    ];
-
-    public function zone(): BelongsTo
+    protected static function booted(): void
     {
-        return $this->belongsTo(Zone::class);
+        static::addGlobalScope('region_level', function ($query) {
+            $query->where('level', 'region');
+        });
     }
 
-    public function territories(): HasMany
+    protected static function boot(): void
     {
-        return $this->hasMany(Territory::class);
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->level = 'region';
+        });
     }
 }

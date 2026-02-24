@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @deprecated The 2024 schema may not include a permissions table.
+ * Kept for backward compatibility.
+ */
 class Permission extends Model
 {
     use HasFactory;
@@ -21,7 +25,6 @@ class Permission extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'status' => 'boolean',
     ];
 
     public function roles(): BelongsToMany

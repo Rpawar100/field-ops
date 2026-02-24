@@ -2,38 +2,11 @@
 
 namespace App\Models\Demo;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Crop;
-
-class DemoStage extends Model
+/**
+ * @deprecated DemoStage no longer exists in the 2024 schema.
+ * Use \App\Models\DemoStageTemplate instead.
+ */
+class DemoStage extends \App\Models\DemoStageTemplate
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'crop_id',
-        'stage_name',
-        'stage_order',
-        'description',
-        'duration_days',
-        'status',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'status' => 'boolean',
-    ];
-
-    public function crop(): BelongsTo
-    {
-        return $this->belongsTo(Crop::class);
-    }
-
-    public function executions(): HasMany
-    {
-        return $this->hasMany(DemoExecution::class);
-    }
+    // Backward-compatible alias — maps to demo_stage_templates table
 }
